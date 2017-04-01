@@ -23,56 +23,80 @@ package com.epam.reportportal.logback.appender;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import com.epam.reportportal.logback.appender.classic.ClassicAppenderService;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import com.epam.reportportal.message.HashMarkSeparatedMessageParser;
+import com.epam.reportportal.message.MessageParser;
+import com.epam.reportportal.message.ReportPortalMessage;
+import com.epam.reportportal.message.TypeAwareByteSource;
+import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
+import rp.com.google.common.base.Function;
+
+import javax.annotation.Nullable;
+import java.util.Date;
+import java.util.UUID;
+
+import static com.epam.reportportal.service.ReportPortal.emitLog;
 
 /**
  * Logback classic module appender for report portal
  */
 public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
-	private Supplier<IAppenderService> classicAppenderService;
+    private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
+    private PatternLayoutEncoder encoder;
 
-	private PatternLayoutEncoder encoder;
+    @Override
+    protected void append(final ILoggingEvent event) {
+        emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
+            @Override
+            public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(@Nullable String itemId) {
+                final String message = event.getFormattedMessage();
+                final String level = event.getLevel().toString();
+                final Date time = new Date(event.getTimeStamp());
 
-	public ReportPortalAppender() {
-		/*
-		 * Lazy initialization of appender service. We are adding this due to
-		 * appender service uses logging by yourself (httpclient, for example).
-		 * This is a cause of logback substitution issue described here:
-		 * http://www.slf4j.org/codes.html#substituteLogger
-		 */
-		classicAppenderService = Suppliers.memoize(new Supplier<IAppenderService>() {
+                SaveLogRQ rq = new SaveLogRQ();
+                rq.setLevel(level);
+                rq.setLogTime(time);
+                rq.setTestItemId(itemId);
 
-			@Override
-			public IAppenderService get() {
-				return new ClassicAppenderService();
-			}
-		});
-	}
+                try {
+                    if (MESSAGE_PARSER.supports(message)) {
+                        ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
+                        TypeAwareByteSource data = rpMessage.getData();
+                        com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File file = new com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File();
+                        file.setContent(data.read());
+                        file.setContentType(data.getMediaType());
+                        file.setName(UUID.randomUUID().toString());
 
-	@Override
-	protected void append(ILoggingEvent eventObject) {
-		classicAppenderService.get().processEvent(eventObject, encoder);
-	}
+                        rq.setFile(file);
+                        rq.setMessage(rpMessage.getMessage());
+                    } else {
+                        rq.setMessage(encoder.getLayout().doLayout(event));
+                    }
 
-	@Override
-	public void start() {
+                } catch (Exception e) {
+                    //skip
+                }
 
-		if (this.encoder == null) {
-			addError("No encoder set for the appender named [" + name + "].");
-			return;
-		}
-		this.encoder.start();
-		super.start();
-	}
+                return rq;
+            }
+        });
+    }
 
-	public PatternLayoutEncoder getEncoder() {
-		return encoder;
-	}
+    @Override
+    public void start() {
+        if (this.encoder == null) {
+            addError("No encoder set for the appender named [" + name + "].");
+            return;
+        }
+        this.encoder.start();
+        super.start();
+    }
 
-	public void setEncoder(PatternLayoutEncoder encoder) {
-		this.encoder = encoder;
-	}
+    public PatternLayoutEncoder getEncoder() {
+        return encoder;
+    }
+
+    public void setEncoder(PatternLayoutEncoder encoder) {
+        this.encoder = encoder;
+    }
 }
