@@ -12,12 +12,16 @@ description = 'EPAM Report portal. Logback Intergration'
 
 repositories {
     jcenter()
+    mavenLocal()
     maven { url "http://dl.bintray.com/epam/reportportal" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    compile 'com.epam.reportportal:client-java-core:2.5.1'
-    compileOnly "ch.qos.logback:logback-classic:1.1.5"
+    compile 'com.epam.reportportal:client-java:3.0.0-BETA-9'
+    compile 'com.epam.reportportal:commons-model:3.0.0-BETA-2'
+
+    compileOnly "ch.qos.logback:logback-classic:1.1.10"
 }
 
 task wrapper(type: Wrapper) {
