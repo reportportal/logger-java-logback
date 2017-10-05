@@ -30,7 +30,6 @@ import com.epam.reportportal.message.TypeAwareByteSource;
 import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
 import rp.com.google.common.base.Function;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -48,7 +47,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
     protected void append(final ILoggingEvent event) {
         emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
             @Override
-            public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(@Nullable String itemId) {
+            public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemId) {
                 final String message = event.getFormattedMessage();
                 final String level = event.getLevel().toString();
                 final Date time = new Date(event.getTimeStamp());

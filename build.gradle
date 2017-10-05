@@ -18,12 +18,14 @@ repositories {
 }
 
 dependencies {
-    compile 'com.epam.reportportal:client-java:3.0.0'
-    compile 'com.epam.reportportal:commons-model:3.0.0'
+//    compile 'com.epam.reportportal:client-java:3.0.0'
+//    compile 'com.epam.reportportal:commons-model:3.0.0'
+    compile 'com.github.reportportal:client-java:52ee665'
+    compile 'com.github.reportportal:commons-model:4ba7434'
 
     compileOnly "ch.qos.logback:logback-classic:1.1.10"
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.5'
 }
