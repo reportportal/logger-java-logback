@@ -7,7 +7,7 @@
 [![Build with Love](https://img.shields.io/badge/build%20with-❤%EF%B8%8F%E2%80%8D-lightgrey.svg)](http://reportportal.io?style=flat)
 #### Configuration
 
-Add report portal appender into `logback.xml` configuration file.
+Add a report portal appender into `logback.xml` configuration file.
 
 ```XML
 <appender name="ReportPortalAppender" class="com.epam.reportportal.logback.appender.ReportPortalAppender">
@@ -22,9 +22,9 @@ Add report portal appender into `logback.xml` configuration file.
 
 #### Screenshots
 
-For **logback** it is possible to attach binary data to file only by adding to log message additional text information.
+For **logback** it is possible to attach binary data to the file only by adding to the log message additional text information.
 
-In this case log message should have next format:
+In this case a log message should have next format:
 
   ```properties
   RP_MESSAGE#FILE#FILENAME#MESSAGE_TEST
@@ -36,7 +36,7 @@ In this case log message should have next format:
  ```
 
 #### Grayscale images
-There is client parameter into `reportportal.properties` with `boolean` type value for screenshots sending in `grayscale` or `color` view. By default it is set as `true` and all pictures for Report Portal will be in `grayscale` format.
+There is a client parameter into `reportportal.properties` with `boolean` type value for screenshots sending in `grayscale` or `color` view. By default it is set as `true` and all pictures for Report Portal will be in `grayscale` format.
 
 **reportportal.properties**
 ```properties
