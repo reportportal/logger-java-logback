@@ -18,8 +18,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.epam.reportportal:client-java:4.0.0'
-    compile 'com.epam.reportportal:commons-model:4.0.3'
+//    compile 'com.epam.reportportal:client-java:4.0.0'
+//    compile 'com.epam.reportportal:commons-model:4.0.3'
+    compile 'com.github.reportportal:commons-model:1e01b5e'
+    compile 'com.github.reportportal:client-java:f69f59a'
 
     compileOnly "ch.qos.logback:logback-classic:1.1.10"
 }
