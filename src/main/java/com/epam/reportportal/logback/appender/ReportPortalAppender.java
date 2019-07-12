@@ -55,7 +55,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
                 SaveLogRQ rq = new SaveLogRQ();
                 rq.setLevel(level);
                 rq.setLogTime(time);
-                rq.setTestItemId(itemId);
+                rq.setItemId(itemId);
 
                 try {
                     if (MESSAGE_PARSER.supports(message)) {
