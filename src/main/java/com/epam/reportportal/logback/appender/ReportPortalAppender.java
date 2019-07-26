@@ -1,22 +1,17 @@
 /*
- * Copyright 2016 EPAM Systems
+ * Copyright (C) 2019 EPAM Systems
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/logger-java-logback
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.epam.reportportal.logback.appender;
 
@@ -40,62 +35,62 @@ import static com.epam.reportportal.service.ReportPortal.emitLog;
  */
 public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
-    private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
-    private PatternLayoutEncoder encoder;
+	private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
+	private PatternLayoutEncoder encoder;
 
-    @Override
-    protected void append(final ILoggingEvent event) {
-        emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
-            @Override
-            public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemId) {
-                final String message = event.getFormattedMessage();
-                final String level = event.getLevel().toString();
-                final Date time = new Date(event.getTimeStamp());
+	@Override
+	protected void append(final ILoggingEvent event) {
+		emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
+			@Override
+			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemId) {
+				final String message = event.getFormattedMessage();
+				final String level = event.getLevel().toString();
+				final Date time = new Date(event.getTimeStamp());
 
-                SaveLogRQ rq = new SaveLogRQ();
-                rq.setLevel(level);
-                rq.setLogTime(time);
-                rq.setItemId(itemId);
+				SaveLogRQ rq = new SaveLogRQ();
+				rq.setLevel(level);
+				rq.setLogTime(time);
+				rq.setItemId(itemId);
 
-                try {
-                    if (MESSAGE_PARSER.supports(message)) {
-                        ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
-                        TypeAwareByteSource data = rpMessage.getData();
-                        com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File file = new com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File();
-                        file.setContent(data.read());
-                        file.setContentType(data.getMediaType());
-                        file.setName(UUID.randomUUID().toString());
+				try {
+					if (MESSAGE_PARSER.supports(message)) {
+						ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
+						TypeAwareByteSource data = rpMessage.getData();
+						com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File file = new com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File();
+						file.setContent(data.read());
+						file.setContentType(data.getMediaType());
+						file.setName(UUID.randomUUID().toString());
 
-                        rq.setFile(file);
-                        rq.setMessage(rpMessage.getMessage());
-                    } else {
-                        rq.setMessage(encoder.getLayout().doLayout(event));
-                    }
+						rq.setFile(file);
+						rq.setMessage(rpMessage.getMessage());
+					} else {
+						rq.setMessage(encoder.getLayout().doLayout(event));
+					}
 
-                } catch (Exception e) {
-                    //skip
-                }
+				} catch (Exception e) {
+					//skip
+				}
 
-                return rq;
-            }
-        });
-    }
+				return rq;
+			}
+		});
+	}
 
-    @Override
-    public void start() {
-        if (this.encoder == null) {
-            addError("No encoder set for the appender named [" + name + "].");
-            return;
-        }
-        this.encoder.start();
-        super.start();
-    }
+	@Override
+	public void start() {
+		if (this.encoder == null) {
+			addError("No encoder set for the appender named [" + name + "].");
+			return;
+		}
+		this.encoder.start();
+		super.start();
+	}
 
-    public PatternLayoutEncoder getEncoder() {
-        return encoder;
-    }
+	public PatternLayoutEncoder getEncoder() {
+		return encoder;
+	}
 
-    public void setEncoder(PatternLayoutEncoder encoder) {
-        this.encoder = encoder;
-    }
+	public void setEncoder(PatternLayoutEncoder encoder) {
+		this.encoder = encoder;
+	}
 }
