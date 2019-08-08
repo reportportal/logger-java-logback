@@ -42,7 +42,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 	protected void append(final ILoggingEvent event) {
 		emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
 			@Override
-			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemId) {
+			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemUuid) {
 				final String message = event.getFormattedMessage();
 				final String level = event.getLevel().toString();
 				final Date time = new Date(event.getTimeStamp());
@@ -50,7 +50,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 				SaveLogRQ rq = new SaveLogRQ();
 				rq.setLevel(level);
 				rq.setLogTime(time);
-				rq.setItemId(itemId);
+				rq.setItemUuid(itemUuid);
 
 				try {
 					if (MESSAGE_PARSER.supports(message)) {

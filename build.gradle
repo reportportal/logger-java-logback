@@ -27,8 +27,8 @@ dependencies {
         compile 'com.epam.reportportal:client-java:5.0.0-BETA-1'
         compile 'com.epam.reportportal:commons-model:5.0.0-BETA-7'
     } else {
-        compile 'com.github.reportportal:commons-model:9f72549'
-        compile 'com.github.reportportal:client-java:9c32e5c'
+        compile 'com.github.reportportal:commons-model:2332113'
+        compile 'com.github.reportportal:client-java:59bcb21'
     }
     compileOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
