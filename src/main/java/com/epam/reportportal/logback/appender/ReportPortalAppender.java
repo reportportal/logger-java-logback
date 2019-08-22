@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright (C) 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.epam.reportportal.logback.appender;
 
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import com.epam.reportportal.message.HashMarkSeparatedMessageParser;
@@ -35,12 +36,13 @@ import static com.epam.reportportal.service.ReportPortal.emitLog;
 public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
 	private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
+	private PatternLayoutEncoder encoder;
 
 	@Override
 	protected void append(final ILoggingEvent event) {
 		emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
 			@Override
-			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemId) {
+			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemUuid) {
 				final String message = event.getFormattedMessage();
 				final String level = event.getLevel().toString();
 				final Date time = new Date(event.getTimeStamp());
@@ -48,7 +50,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 				SaveLogRQ rq = new SaveLogRQ();
 				rq.setLevel(level);
 				rq.setLogTime(time);
-				rq.setItemId(itemId);
+				rq.setItemUuid(itemUuid);
 
 				try {
 					if (MESSAGE_PARSER.supports(message)) {
@@ -62,7 +64,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 						rq.setFile(file);
 						rq.setMessage(rpMessage.getMessage());
 					} else {
-						rq.setMessage(message);
+						rq.setMessage(encoder.getLayout().doLayout(event));
 					}
 
 				} catch (Exception e) {
@@ -72,5 +74,23 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 				return rq;
 			}
 		});
+	}
+
+	@Override
+	public void start() {
+		if (this.encoder == null) {
+			addError("No encoder set for the appender named [" + name + "].");
+			return;
+		}
+		this.encoder.start();
+		super.start();
+	}
+
+	public PatternLayoutEncoder getEncoder() {
+		return encoder;
+	}
+
+	public void setEncoder(PatternLayoutEncoder encoder) {
+		this.encoder = encoder;
 	}
 }
