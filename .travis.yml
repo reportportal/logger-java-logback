@@ -1,1 +1,8 @@
+sudo: false
 language: java
+dist: trusty
+
+script: ./gradlew build
+
+jdk:
+  - openjdk8
