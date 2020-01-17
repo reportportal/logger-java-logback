@@ -23,10 +23,10 @@ import com.epam.reportportal.message.MessageParser;
 import com.epam.reportportal.message.ReportPortalMessage;
 import com.epam.reportportal.message.TypeAwareByteSource;
 import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
-import rp.com.google.common.base.Function;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static com.epam.reportportal.service.ReportPortal.emitLog;
 
@@ -40,39 +40,34 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
 	@Override
 	protected void append(final ILoggingEvent event) {
-		emitLog(new Function<String, com.epam.ta.reportportal.ws.model.log.SaveLogRQ>() {
-			@Override
-			public com.epam.ta.reportportal.ws.model.log.SaveLogRQ apply(String itemUuid) {
-				final String message = event.getFormattedMessage();
-				final String level = event.getLevel().toString();
-				final Date time = new Date(event.getTimeStamp());
+		emitLog((Function<String, SaveLogRQ>) itemUuid -> {
+			final String message = event.getFormattedMessage();
+			final String level = event.getLevel().toString();
+			final Date time = new Date(event.getTimeStamp());
 
-				SaveLogRQ rq = new SaveLogRQ();
-				rq.setLevel(level);
-				rq.setLogTime(time);
-				rq.setItemUuid(itemUuid);
+			SaveLogRQ request = new SaveLogRQ();
+			request.setLevel(level);
+			request.setLogTime(time);
+			request.setItemUuid(itemUuid);
 
-				try {
-					if (MESSAGE_PARSER.supports(message)) {
-						ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
-						TypeAwareByteSource data = rpMessage.getData();
-						com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File file = new com.epam.ta.reportportal.ws.model.log.SaveLogRQ.File();
-						file.setContent(data.read());
-						file.setContentType(data.getMediaType());
-						file.setName(UUID.randomUUID().toString());
+			try {
+				if (MESSAGE_PARSER.supports(message)) {
+					ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
+					TypeAwareByteSource data = rpMessage.getData();
+					SaveLogRQ.File file = new SaveLogRQ.File();
+					file.setContent(data.read());
+					file.setContentType(data.getMediaType());
+					file.setName(UUID.randomUUID().toString());
 
-						rq.setFile(file);
-						rq.setMessage(rpMessage.getMessage());
-					} else {
-						rq.setMessage(encoder.getLayout().doLayout(event));
-					}
-
-				} catch (Exception e) {
-					//skip
+					request.setFile(file);
+					request.setMessage(rpMessage.getMessage());
+				} else {
+					request.setMessage(encoder.getLayout().doLayout(event));
 				}
-
-				return rq;
+			} catch (Exception e) {
+				//skip
 			}
+			return request;
 		});
 	}
 
