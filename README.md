@@ -32,8 +32,11 @@ In this case a log message should have next format:
   RP_MESSAGE#BASE64#BASE_64_REPRESENTATION#MESSAGE_TEST
   ```
   > RP_MESSAGE - message header  
+  
   > FILE, BASE64 - attaching data representation type  
+  
   > FILENAME, BASE_64_REPRESENTATION - path to sending file/ base64 representation of sending data  
+  
   > MESSAGE_TEST - string log message  
 
   Example:
@@ -53,10 +56,10 @@ In this case a log message should have next format:
         
     @Test
     public void logJsonFile() throws IOException, InterruptedException {
-      /* here we are logging some binary data as file (useful for selenium) */
-      File file = File.createTempFile("rp-test", ".json");
-      Resources.asByteSource(Resources.getResource(JSON_FILE_PATH)).copyTo(Files.asByteSink(file));
-      LOGGER.info("RP_MESSAGE#FILE#{}#{}", file.getAbsolutePath(), "I'm logging content via temp file");
+        /* here we are logging some binary data as file (useful for selenium) */
+        File file = File.createTempFile("rp-test", ".json");
+        Resources.asByteSource(Resources.getResource(JSON_FILE_PATH)).copyTo(Files.asByteSink(file));
+        LOGGER.info("RP_MESSAGE#FILE#{}#{}", file.getAbsolutePath(), "I'm logging content via temp file");
     }
   ```
 
