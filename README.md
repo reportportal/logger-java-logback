@@ -31,10 +31,10 @@ In this case a log message should have next format:
   RP_MESSAGE#FILE#FILENAME#MESSAGE_TEST
   RP_MESSAGE#BASE64#BASE_64_REPRESENTATION#MESSAGE_TEST
   ```
-  > RP_MESSAGE - message header
-  > FILE, BASE64 - attaching data representation type
-  > FILENAME, BASE_64_REPRESENTATION - path to sending file/ base64 representation of sending data
-  > MESSAGE_TEST - string log message
+  > RP_MESSAGE - message header  
+  > FILE, BASE64 - attaching data representation type  
+  > FILENAME, BASE_64_REPRESENTATION - path to sending file/ base64 representation of sending data  
+  > MESSAGE_TEST - string log message  
 
   Example:
   ```java
