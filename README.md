@@ -21,7 +21,7 @@ Add a report portal appender into `logback.xml` configuration file.
 </root>
 ```
 
-#### Attaching files 
+#### Attaching files (Screenshots, videos, archives, reports etc.)
 
 For **logback** it is possible to attach binary data to the file only by adding to the log message additional text information.
 
