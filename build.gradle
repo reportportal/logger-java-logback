@@ -34,7 +34,7 @@ publishing {
 }
 
 dependencies {
-    compile 'com.epam.reportportal:client-java:5.0.1'
+    compile 'com.epam.reportportal:client-java:5.0.2'
     compile 'com.epam.reportportal:commons-model:5.0.0'
     compileOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
