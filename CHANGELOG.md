@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- bumping up client version
 
 ## [5.0.2]
 ### Changed
