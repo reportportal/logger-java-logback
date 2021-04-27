@@ -25,9 +25,8 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-    jcenter()
     mavenLocal()
-    releaseMode ? maven { url "http://dl.bintray.com/epam/reportportal" } : maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 project.ext.githubUserName = project.hasProperty('githubUserName') ? githubUserName : ""
@@ -47,7 +46,7 @@ publishing {
 }
 
 dependencies {
-    implementation 'com.epam.reportportal:client-java:5.0.6'
+    implementation 'com.epam.reportportal:client-java:5.0.21'
     implementation 'com.epam.reportportal:commons-model:5.0.0'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 }
