@@ -15,38 +15,19 @@
  */
 apply plugin: 'java-library'
 
-project.ext.releaseMode = project.hasProperty('releaseMode')
-
-def branch = releaseMode ? '5.0.0' : 'develop'
-apply from: "https://raw.githubusercontent.com/reportportal/gradle-scripts/$branch/release-commons.gradle"
-apply from: "https://raw.githubusercontent.com/reportportal/gradle-scripts/$branch/build-quality.gradle"
+apply from: "${project.scripts_url}/${project.scripts_branch}/build-quality.gradle"
+apply from: "${project.scripts_url}/${project.scripts_branch}/release-commons.gradle"
+apply from: "${project.scripts_url}/${project.scripts_branch}/signing.gradle"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
-project.ext.githubUserName = project.hasProperty('githubUserName') ? githubUserName : ""
-project.ext.githubToken = project.hasProperty('githubToken') ? githubToken : ""
-
-publishing {
-    repositories {
-        maven {
-            name = "Logback GitHub Packages"
-            url = uri("https://maven.pkg.github.com/reportportal/logger-java-logback")
-            credentials {
-                username = githubUserName
-                password = githubToken
-            }
-        }
-    }
-}
-
 dependencies {
-    implementation 'com.epam.reportportal:client-java:5.0.21'
+    implementation 'com.epam.reportportal:client-java:5.1.0-RC-12'
     implementation 'com.epam.reportportal:commons-model:5.0.0'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 }
@@ -54,7 +35,3 @@ dependencies {
 wrapper {
     gradleVersion = '5.4.1'
 }
-
-def releaseDependencies = [bintrayUpload, publish]
-releaseDependencies.addAll(afterReleaseBuild.getDependsOn())
-afterReleaseBuild.setDependsOn(releaseDependencies)
