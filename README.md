@@ -1,6 +1,5 @@
 # logger-java-logback
- [ ![Download](https://api.bintray.com/packages/epam/reportportal/logger-java-logback/images/download.svg) ](https://bintray.com/epam/reportportal/logger-java-logback/_latestVersion)
- 
+[![Maven Central](https://img.shields.io/maven-central/v/com.epam.reportportal/logger-java-logback.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.epam.reportportal%22%20AND%20a:%22logger-java-logback%22)
 [![Join Slack chat!](https://reportportal-slack-auto.herokuapp.com/badge.svg)](https://reportportal-slack-auto.herokuapp.com)
 [![stackoverflow](https://img.shields.io/badge/reportportal-stackoverflow-orange.svg?style=flat)](http://stackoverflow.com/questions/tagged/reportportal)
 [![UserVoice](https://img.shields.io/badge/uservoice-vote%20ideas-orange.svg?style=flat)](https://rpp.uservoice.com/forums/247117-report-portal)
@@ -65,7 +64,7 @@ In this case a log message should have next format:
 
 #### Grayscale images
 There is a client parameter into `reportportal.properties` with `boolean` type value for screenshots sending in `grayscale` or `color` 
-view. By default it is set as `true` and all pictures for Report Portal will be in `grayscale` format.
+view. By default, it is set as `true` and all pictures for Report Portal will be in `grayscale` format.
 
 **reportportal.properties**
 ```properties
