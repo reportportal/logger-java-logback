@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Changed
-- Client version updated on [5.1.3](https://github.com/reportportal/client-java/releases/tag/5.1.3)
+- Client version updated on [5.1.4](https://github.com/reportportal/client-java/releases/tag/5.1.4)
 - Logback version updated on 1.2.10 due to security fixes
 
 ## [5.1.0]
