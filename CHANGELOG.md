@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [5.1.1]
 ### Changed
 - Client version updated on [5.1.4](https://github.com/reportportal/client-java/releases/tag/5.1.4)
 - Logback version updated on 1.2.10 due to security fixes
