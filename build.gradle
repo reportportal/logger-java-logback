@@ -57,6 +57,16 @@ dependencies {
 
 }
 
+test {
+    useJUnitPlatform()
+    systemProperty("file.encoding", "utf-8")
+    outputs.upToDateWhen { false }
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
+}
+
 wrapper {
     gradleVersion = '5.4.1'
 }
