@@ -60,3 +60,5 @@ dependencies {
 wrapper {
     gradleVersion = '5.4.1'
 }
+
+build.dependsOn jacocoTestReport
