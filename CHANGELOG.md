@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [5.1.2]
 ### Added
 - Logging issues skip, by @HardNorth
 ### Changed
