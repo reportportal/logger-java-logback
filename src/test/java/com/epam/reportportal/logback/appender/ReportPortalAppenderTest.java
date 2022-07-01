@@ -29,8 +29,8 @@ public class ReportPortalAppenderTest {
     @Mock
     private ReportPortalClient client;
 
-    private ExecutorService executor = CommonUtils.testExecutor();
-    private Scheduler scheduler = Schedulers.from(executor);
+    private final ExecutorService executor = CommonUtils.testExecutor();
+    private final Scheduler scheduler = Schedulers.from(executor);
 
     private static Logger createLoggerFor(Class<?> clazz) {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -51,6 +51,7 @@ public class ReportPortalAppenderTest {
         return logger;
     }
 
+    @SuppressWarnings("unchecked")
     private static void mockBatchLogging(ReportPortalClient client) {
         when(client.log(any(List.class))).thenReturn(Maybe.just(new BatchSaveOperatingRS()));
     }
@@ -61,6 +62,7 @@ public class ReportPortalAppenderTest {
     }
 
     @Test
+    @SuppressWarnings({"unchecked", "ReactiveStreamsUnusedPublisher"})
     public void test_logger_append() {
         mockBatchLogging(client);
         LoggingContext.init(Maybe.just("launch_uuid"), Maybe.just("item_uuid"), client, scheduler);
@@ -71,6 +73,7 @@ public class ReportPortalAppenderTest {
     }
 
     @Test
+    @SuppressWarnings({"unchecked", "ReactiveStreamsUnusedPublisher"})
     public void test_logger_skip() {
         LoggingContext.init(Maybe.just("launch_uuid"), Maybe.just("item_uuid"), client, scheduler);
         Logger logger = createLoggerFor(LoggingSubscriber.class);
