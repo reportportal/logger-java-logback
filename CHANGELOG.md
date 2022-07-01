@@ -1,6 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Logging issues skip, by @HardNorth
+### Changed
+- Client version updated on [5.1.11](https://github.com/reportportal/client-java/releases/tag/5.1.11), by @HardNorth
+- Logback version updated on 1.2.11, by @HardNorth
 
 ## [5.1.1]
 ### Changed

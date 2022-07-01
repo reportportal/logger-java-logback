@@ -22,11 +22,13 @@ import com.epam.reportportal.message.HashMarkSeparatedMessageParser;
 import com.epam.reportportal.message.MessageParser;
 import com.epam.reportportal.message.ReportPortalMessage;
 import com.epam.reportportal.message.TypeAwareByteSource;
+import com.epam.reportportal.service.logs.LoggingSubscriber;
 import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import static com.epam.reportportal.service.ReportPortal.emitLog;
 
@@ -35,57 +37,66 @@ import static com.epam.reportportal.service.ReportPortal.emitLog;
  */
 public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
-	private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
-	private PatternLayoutEncoder encoder;
+    private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
+    private static final List<String> LOGGING_ISSUE =
+            Collections.singletonList(LoggingSubscriber.class.getCanonicalName());
+    private PatternLayoutEncoder encoder;
 
-	@Override
-	protected void append(final ILoggingEvent event) {
-		emitLog((Function<String, SaveLogRQ>) itemUuid -> {
-			final String message = event.getFormattedMessage();
-			final String level = event.getLevel().toString();
-			final Date time = new Date(event.getTimeStamp());
+    @Override
+    protected void append(final ILoggingEvent event) {
+        String loggerName = event.getLoggerName();
+        for (String packagePrefix : LOGGING_ISSUE) {
+            if (loggerName.startsWith(packagePrefix)) {
+                return;
+            }
+        }
 
-			SaveLogRQ request = new SaveLogRQ();
-			request.setLevel(level);
-			request.setLogTime(time);
-			request.setItemUuid(itemUuid);
+        emitLog(itemUuid -> {
+            final String message = event.getFormattedMessage();
+            final String level = event.getLevel().toString();
+            final Date time = new Date(event.getTimeStamp());
 
-			try {
-				if (MESSAGE_PARSER.supports(message)) {
-					ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
-					TypeAwareByteSource data = rpMessage.getData();
-					SaveLogRQ.File file = new SaveLogRQ.File();
-					file.setContent(data.read());
-					file.setContentType(data.getMediaType());
-					file.setName(UUID.randomUUID().toString());
+            SaveLogRQ request = new SaveLogRQ();
+            request.setLevel(level);
+            request.setLogTime(time);
+            request.setItemUuid(itemUuid);
 
-					request.setFile(file);
-					request.setMessage(rpMessage.getMessage());
-				} else {
-					request.setMessage(encoder.getLayout().doLayout(event));
-				}
-			} catch (Exception e) {
-				//skip
-			}
-			return request;
-		});
-	}
+            try {
+                if (MESSAGE_PARSER.supports(message)) {
+                    ReportPortalMessage rpMessage = MESSAGE_PARSER.parse(message);
+                    TypeAwareByteSource data = rpMessage.getData();
+                    SaveLogRQ.File file = new SaveLogRQ.File();
+                    file.setContent(data.read());
+                    file.setContentType(data.getMediaType());
+                    file.setName(UUID.randomUUID().toString());
 
-	@Override
-	public void start() {
-		if (this.encoder == null) {
-			addError("No encoder set for the appender named [" + name + "].");
-			return;
-		}
-		this.encoder.start();
-		super.start();
-	}
+                    request.setFile(file);
+                    request.setMessage(rpMessage.getMessage());
+                } else {
+                    request.setMessage(encoder.getLayout().doLayout(event));
+                }
+            } catch (Exception e) {
+                //skip
+            }
+            return request;
+        });
+    }
 
-	public PatternLayoutEncoder getEncoder() {
-		return encoder;
-	}
+    @Override
+    public void start() {
+        if (this.encoder == null) {
+            addError("No encoder set for the appender named [" + name + "].");
+            return;
+        }
+        this.encoder.start();
+        super.start();
+    }
 
-	public void setEncoder(PatternLayoutEncoder encoder) {
-		this.encoder = encoder;
-	}
+    public PatternLayoutEncoder getEncoder() {
+        return encoder;
+    }
+
+    public void setEncoder(PatternLayoutEncoder encoder) {
+        this.encoder = encoder;
+    }
 }
