@@ -21,9 +21,9 @@ apply from: "${project.scripts_url}/${project.scripts_branch}/signing.gradle"
 apply from: "${project.scripts_url}/${project.scripts_branch}/jacoco.gradle"
 
 project.ext.limits = [
-        'instruction': 70,
+        'instruction': 60,
         'branch'     : 53,
-        'line'       : 70,
+        'line'       : 65,
         'complexity' : 60,
         'method'     : 65,
         'class'      : 90
