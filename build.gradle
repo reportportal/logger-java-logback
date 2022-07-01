@@ -18,18 +18,43 @@ apply plugin: 'java-library'
 apply from: "${project.scripts_url}/${project.scripts_branch}/build-quality.gradle"
 apply from: "${project.scripts_url}/${project.scripts_branch}/release-commons.gradle"
 apply from: "${project.scripts_url}/${project.scripts_branch}/signing.gradle"
+apply from: "${project.scripts_url}/${project.scripts_branch}/jacoco.gradle"
+
+project.ext.limits = [
+        'instruction': 70,
+        'branch'     : 53,
+        'line'       : 70,
+        'complexity' : 60,
+        'method'     : 65,
+        'class'      : 90
+]
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
     implementation 'com.epam.reportportal:client-java:5.1.11'
     implementation 'com.epam.reportportal:commons-model:5.0.0'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    testImplementation 'com.github.reportportal:agent-java-test-utils:236a68c'
+    testImplementation('org.awaitility:awaitility:4.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ("org.junit.platform:junit-platform-runner:${junit_runner_version}") {
+        exclude module: 'junit'
+    }
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junit_version}"
+    testImplementation 'org.hamcrest:hamcrest-core:2.2'
+    testImplementation "org.mockito:mockito-core:${project.mockito_version}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${project.mockito_version}"
+
 }
 
 wrapper {
