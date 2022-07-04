@@ -13,14 +13,26 @@ import com.epam.ta.reportportal.ws.model.BatchSaveOperatingRS;
 import io.reactivex.Maybe;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static java.util.Optional.ofNullable;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -82,4 +94,35 @@ public class ReportPortalAppenderTest {
         verify(client, timeout(100).times(0)).log(any(List.class));
     }
 
+    @Test
+    @SuppressWarnings({"unchecked", "ReactiveStreamsUnusedPublisher"})
+    public void test_binary_file_message_encoding() throws IOException {
+        mockBatchLogging(client);
+        LoggingContext.init(Maybe.just("launch_uuid"), Maybe.just("item_uuid"), client, scheduler);
+        String message = "test message";
+        Logger logger = createLoggerFor(this.getClass());
+        byte[] content;
+        try (InputStream is = ofNullable(Thread.currentThread().getContextClassLoader().getResourceAsStream("pug/unlucky.jpg"))
+                .orElseThrow(() -> new IllegalStateException("Unable to find test image file"))) {
+            content = IOUtils.toByteArray(is);
+        }
+        logger.info("RP_MESSAGE#BASE64#{}#{}", Base64.getEncoder().encodeToString(content), message);
+        LoggingContext.complete();
+        ArgumentCaptor<List<MultipartBody.Part>> captor = ArgumentCaptor.forClass(List.class);
+        verify(client).log(captor.capture());
+
+        List<MultipartBody.Part> request = captor.getValue();
+        assertThat(request, hasSize(2));
+
+        RequestBody jsonPart = request.get(0).body();
+        MediaType jsonPartType = jsonPart.contentType();
+        assertThat(jsonPartType, notNullValue());
+        assertThat(jsonPartType.toString(), Matchers.startsWith("application/json"));
+
+        RequestBody binaryPart = request.get(1).body();
+        MediaType binaryPartType = binaryPart.contentType();
+        assertThat(binaryPartType, notNullValue());
+        assertThat(binaryPartType.toString(), equalTo("image/jpeg"));
+        assertThat(binaryPart.contentLength(), equalTo((long) content.length));
+    }
 }
