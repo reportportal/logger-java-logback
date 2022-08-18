@@ -22,7 +22,6 @@ import com.epam.reportportal.message.HashMarkSeparatedMessageParser;
 import com.epam.reportportal.message.MessageParser;
 import com.epam.reportportal.message.ReportPortalMessage;
 import com.epam.reportportal.message.TypeAwareByteSource;
-import com.epam.reportportal.service.logs.LoggingSubscriber;
 import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
 
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
 
     private static final MessageParser MESSAGE_PARSER = new HashMarkSeparatedMessageParser();
     private static final List<String> LOGGING_ISSUE =
-            Collections.singletonList(LoggingSubscriber.class.getCanonicalName());
+            Collections.singletonList("com.epam.reportportal.service.logs.LoggingSubscriber");
     private PatternLayoutEncoder encoder;
 
     @Override
@@ -92,6 +91,7 @@ public class ReportPortalAppender extends AppenderBase<ILoggingEvent> {
         super.start();
     }
 
+    @SuppressWarnings("unused")
     public PatternLayoutEncoder getEncoder() {
         return encoder;
     }
