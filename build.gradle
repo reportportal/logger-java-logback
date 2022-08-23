@@ -21,9 +21,9 @@ apply from: "${project.scripts_url}/${project.scripts_branch}/signing.gradle"
 apply from: "${project.scripts_url}/${project.scripts_branch}/jacoco.gradle"
 
 project.ext.limits = [
-        'instruction': 70,
+        'instruction': 60,
         'branch'     : 53,
-        'line'       : 70,
+        'line'       : 65,
         'complexity' : 60,
         'method'     : 65,
         'class'      : 90
@@ -54,9 +54,21 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
     testImplementation "org.mockito:mockito-core:${project.mockito_version}"
     testImplementation "org.mockito:mockito-junit-jupiter:${project.mockito_version}"
+    testImplementation 'org.apache.commons:commons-io:1.3.2'
+}
 
+test {
+    useJUnitPlatform()
+    systemProperty("file.encoding", "utf-8")
+    outputs.upToDateWhen { false }
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
 }
 
 wrapper {
     gradleVersion = '5.4.1'
 }
+
+build.dependsOn jacocoTestReport

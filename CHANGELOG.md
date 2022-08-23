@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Remove direct reference on `LoggingSubscriber` class to avoid exceptions in some cases, by @HardNorth
 
 ## [5.1.2]
 ### Added
