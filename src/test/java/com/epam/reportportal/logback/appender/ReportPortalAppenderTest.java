@@ -45,7 +45,7 @@ public class ReportPortalAppenderTest {
     private final Scheduler scheduler = Schedulers.from(executor);
 
     private static Logger createLoggerFor(Class<?> clazz) {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        LoggerContext lc = new LoggerContext();
         PatternLayoutEncoder ple = new PatternLayoutEncoder();
 
         ple.setPattern("%date %level [%thread] %logger{10} [%file:%line] %msg%n");
