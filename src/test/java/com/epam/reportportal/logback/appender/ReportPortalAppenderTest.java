@@ -22,7 +22,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +44,7 @@ public class ReportPortalAppenderTest {
     private final Scheduler scheduler = Schedulers.from(executor);
 
     private static Logger createLoggerFor(Class<?> clazz) {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        LoggerContext lc = new LoggerContext();
         PatternLayoutEncoder ple = new PatternLayoutEncoder();
 
         ple.setPattern("%date %level [%thread] %logger{10} [%file:%line] %msg%n");
@@ -56,7 +55,7 @@ public class ReportPortalAppenderTest {
         appender.setContext(lc);
         appender.start();
 
-        Logger logger = (Logger) LoggerFactory.getLogger(clazz);
+        Logger logger = lc.getLogger(clazz);
         logger.addAppender(appender);
         logger.setLevel(Level.DEBUG);
         logger.setAdditive(false);
