@@ -34,15 +34,14 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation 'com.epam.reportportal:client-java:5.1.16'
+    implementation 'com.epam.reportportal:client-java:5.1.21'
     implementation 'com.epam.reportportal:commons-model:5.0.0'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
 
-    testImplementation 'com.github.reportportal:agent-java-test-utils:236a68c'
+    testImplementation 'com.epam.reportportal:agent-java-test-utils:0.0.2'
     testImplementation('org.awaitility:awaitility:4.0.2') {
         exclude group: 'org.hamcrest'
     }
