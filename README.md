@@ -23,7 +23,7 @@ Add this section into `<dependecies>` section:
 
 <dependency>
     <groupId>com.epam.reportportal</groupId>
-    <artifactId>logger-java-log4j</artifactId>
+    <artifactId>logger-java-logback</artifactId>
     <version>5.1.6</version>
     <scope>test</scope>
 </dependency>
@@ -34,7 +34,7 @@ Add this section into `<dependecies>` section:
 Add this line into `dependecies` block:
 
 ```groovy
-testImplementation 'com.epam.reportportal:logger-java-log4j:5.1.6'
+testImplementation 'com.epam.reportportal:logger-java-logback:5.1.6'
 ```
 
 ## Configuration
