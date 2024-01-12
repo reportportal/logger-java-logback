@@ -1,6 +1,6 @@
 # Logback appender for Report Portal
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.epam.reportportal/logger-java-logback.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.epam.reportportal%22%20AND%20a:%22logger-java-logback%22)
+[![Maven Central](https://img.shields.io/maven-central/v/com.epam.reportportal/logger-java-logback.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.epam.reportportal/logger-java-logback)
 [![CI Build](https://github.com/reportportal/logger-java-logback/actions/workflows/ci.yml/badge.svg)](https://github.com/reportportal/logger-java-logback/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/reportportal/logger-java-logback/branch/develop/graph/badge.svg?token=uD9LyYQRl4)](https://codecov.io/gh/reportportal/logger-java-logback)
 [![Join Slack chat!](https://slack.epmrpp.reportportal.io/badge.svg)](https://slack.epmrpp.reportportal.io/)
@@ -23,7 +23,7 @@ Add this section into `<dependecies>` section:
 
 <dependency>
     <groupId>com.epam.reportportal</groupId>
-    <artifactId>logger-java-log4j</artifactId>
+    <artifactId>logger-java-logback</artifactId>
     <version>5.1.6</version>
     <scope>test</scope>
 </dependency>
@@ -34,7 +34,7 @@ Add this section into `<dependecies>` section:
 Add this line into `dependecies` block:
 
 ```groovy
-testImplementation 'com.epam.reportportal:logger-java-log4j:5.1.6'
+testImplementation 'com.epam.reportportal:logger-java-logback:5.1.6'
 ```
 
 ## Configuration
