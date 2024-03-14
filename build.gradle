@@ -37,9 +37,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.epam.reportportal:client-java:5.2.5'
-    compileOnly 'ch.qos.logback:logback-classic:1.3.12'
+    compileOnly "com.epam.reportportal:client-java:${client_version}"
+    compileOnly "ch.qos.logback:logback-classic:${logback_version}"
 
+    testImplementation "com.epam.reportportal:client-java:${client_version}"
+    testImplementation "ch.qos.logback:logback-classic:${logback_version}"
     testImplementation 'com.epam.reportportal:agent-java-test-utils:0.0.2'
     testImplementation('org.awaitility:awaitility:4.0.2') {
         exclude group: 'org.hamcrest'
