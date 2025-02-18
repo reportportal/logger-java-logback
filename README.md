@@ -39,7 +39,7 @@ testImplementation 'com.epam.reportportal:logger-java-logback:5.2.3'
 
 ## Configuration
 
-Add a report portal appender into `logback.xml` configuration file.
+Add a report portal appender into `logback.xml` (usually located in `src/main/resources` or `src/test/resources`) configuration file.
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
