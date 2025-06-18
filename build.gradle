@@ -42,7 +42,7 @@ dependencies {
 
     testImplementation "com.epam.reportportal:client-java:${client_version}"
     testImplementation "ch.qos.logback:logback-classic:${logback_version}"
-    testImplementation 'com.epam.reportportal:agent-java-test-utils:0.0.2'
+    testImplementation 'com.epam.reportportal:agent-java-test-utils:0.0.12'
     testImplementation('org.awaitility:awaitility:4.0.2') {
         exclude group: 'org.hamcrest'
     }
