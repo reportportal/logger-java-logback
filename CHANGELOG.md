@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Client version updated to [5.4.1](https://github.com/reportportal/client-java/releases/tag/5.4.1), by @HardNorth
+- Logback version updated to 1.5.18, by @HardNorth
+- Switch on use of `Instant` class instead of `Date` to get more timestamp precision, by @HardNorth
+### Removed
+- Java 8, 9, 10 support, by @HardNorth
 
 ## [5.3.0]
 ### Changed

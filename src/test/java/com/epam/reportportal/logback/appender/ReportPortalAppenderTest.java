@@ -115,7 +115,7 @@ public class ReportPortalAppenderTest {
 		logger.info("test message");
 		launch.finishTestItem(id, new FinishTestItemRQ());
 		launch.finish(new FinishExecutionRQ());
-		verify(client).log(any(List.class));
+		verify(client, times(2)).log(any(List.class));
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class ReportPortalAppenderTest {
 		Logger logger = createLoggerFor(LoggingSubscriber.class);
 		launch.finishTestItem(id, new FinishTestItemRQ());
 		launch.finish(new FinishExecutionRQ());
-		verify(client, timeout(100).times(0)).log(any(List.class));
+		verify(client, timeout(100).times(1)).log(any(List.class));
 	}
 
 	@Test
@@ -143,9 +143,9 @@ public class ReportPortalAppenderTest {
 		launch.finish(new FinishExecutionRQ());
 
 		ArgumentCaptor<List<MultipartBody.Part>> captor = ArgumentCaptor.forClass(List.class);
-		verify(client).log(captor.capture());
+		verify(client, times(2)).log(captor.capture());
 
-		List<MultipartBody.Part> request = captor.getValue();
+		List<MultipartBody.Part> request = captor.getAllValues().get(0);
 		assertThat(request, hasSize(2));
 
 		RequestBody jsonPart = request.get(0).body();
